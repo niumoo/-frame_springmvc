@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	
+	<!-- 全局setting配置 ，根据需要添加-->
+
+	<!-- 配置别名，批量扫描 -->
+	<typeAliases>
+		<package name="net.codingme.ssm.po"/>
+	</typeAliases>
+	
+	<!-- 配置mapper,使用spring进行管理  -->
+	<!-- 遵循规则，mapper.xml和mapper.java在同一目录，名称相同 -->
+
+
+</configuration>
