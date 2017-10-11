@@ -10,6 +10,14 @@
 
 </head>
 <body> 
+<!-- 显示错误信息 -->
+<c:if test="${allErrors != null }">
+	<c:forEach items="${allErrors }" var="error">
+		<p>${error.defaultMessage }</p>
+	</c:forEach>
+
+</c:if>
+
 
 <form id="itemForm" action="${pageContext.request.contextPath }/items/editItemsSubmit.action" method="post" >
 <input type="hidden" name="id" value="${itemsCustom.id }"/>

@@ -2,15 +2,28 @@ package net.codingme.ssm.po;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import net.codingme.ssm.controller.validation.ValiGroup1;
+import net.codingme.ssm.controller.validation.ValiGroup2;
+
 public class Items {
+	
     private Integer id;
 
+    //校验名称在1到30个字符中间
+    //message是提示校验出错显示的信息
+    //groups指定分组
+    @Size(min=1,max=30,message="{items.name.length.error}",groups= {ValiGroup1.class})
     private String name;
 
     private Float price;
 
     private String pic;
 
+    //非空校验
+    @NotNull(message="{items.createtime.isNULL}",groups= {ValiGroup2.class})
     private Date createtime;
 
     private String detail;

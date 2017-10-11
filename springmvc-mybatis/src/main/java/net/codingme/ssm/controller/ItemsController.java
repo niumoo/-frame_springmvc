@@ -4,16 +4,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import net.codingme.ssm.controller.validation.ValiGroup1;
 import net.codingme.ssm.po.ItemsCustom;
 import net.codingme.ssm.po.ItemsQueryVo;
 import net.codingme.ssm.service.ItemsService;
@@ -117,7 +120,15 @@ public class ItemsController {
 
 	/**
 	 * 商品信息修改提交,限制只接收Post请求
-	 *		注意：ItemsCustom中存在时间类型参数，需要自定义日期类型绑定才可以！
+	 * 注意：ItemsCustom中存在时间类型参数，需要自定义日期类型绑定才可以！
+	 * 这里注释了更新调用，只做空实现
+	 * 对ItemsCustom添加校验
+	 * 		在需要校验的pojo前边添加@Validated，在需要校验的pojo后边添加BindingResult bindingResult接收校验出错信息
+	 *      注意：@Validated和BindingResult bindingResult是配对出现，并且形参顺序是固定的（一前一后）。
+	 * 		value= {ValiGroup1.class}：说明只校验ValiGroup1的规则， 如果有多个规则需要使用,分割。在定义规则的地方可以指定所属分组
+	 * 
+	 * @since 2017.10.10 校验
+	 * 
 	 * @param request HttpServletRequest的请求信息
 	 * @param id 要修改的商品ID
 	 * @param itemsCustom 更新后的商品信息
@@ -125,9 +136,23 @@ public class ItemsController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/editItemsSubmit", method={RequestMethod.POST})
-	public String editItemsSubmit(HttpServletRequest request,Integer id,ItemsCustom itemsCustom)throws Exception {
+	public String editItemsSubmit(Model model,Integer id,
+			@Validated(value= {ValiGroup1.class}) ItemsCustom itemsCustom ,BindingResult bindingResult )throws Exception {
+		
+		// 获取校验错误信息，如果有错误信息
+		if(bindingResult.hasErrors()) {
+			//输出错误信息
+			List<ObjectError> allErrors = bindingResult.getAllErrors();
+			for (ObjectError objectError : allErrors) {
+				System.out.println("校验出的错误信息："+objectError.getDefaultMessage());
+			}
+			// 将错误信息传到页面
+			model.addAttribute("allErrors",allErrors);
+			// 出错重新到商品修改页面
+			return "items/editItems";
+		}
 		// 调用service更新商品信息，页面需要将商品信息传到此方法
-		 itemsService.updateItems(id, itemsCustom);
+		// itemsService.updateItems(id, itemsCustom);
 		// 页面转发
 		// return "forward:queryItems.action";
 		// 重定向到商品查询列表

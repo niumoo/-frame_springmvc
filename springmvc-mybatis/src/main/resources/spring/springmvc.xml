@@ -20,11 +20,34 @@
 	<!-- <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" /> -->
 	
 	<!-- 注解的处理器适配器 -->
-	<!-- <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter" /> -->
+	<!-- <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+			<property name="webBindingInitializer" ref="webBindingInitializer"></property>
+	</bean> -->
 	
-	<!-- 自动加载的注解处理器映射器和处理器适配器,conversion-service配置自定义绑定
-		  可以代替上面的处理器映射器和处理器适配器 -->
-	<mvc:annotation-driven conversion-service="conversionService" />
+	<!-- 自动加载的注解处理器映射器和处理器适配器,
+		  可以代替上面的处理器映射器和处理器适配器 ,
+		 conversion-service：配置自定义绑定,
+		 validator：配置校验器，校验器注入到适配器当中
+		 -->
+	<mvc:annotation-driven conversion-service="conversionService" validator="validatorBean" />
+	
+	<!-- JSP视图解析器 ，默认使用JSTL，要添加jstl包-->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
+		<!-- 配置路径前缀 -->
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<!-- 配置路径后缀 -->
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+	<!-- 自定义webBindingInitializer -->
+	<!-- <bean id="webBindingInitializer"
+		class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
+		校验器
+		<property name="validator" ref="validatorBean" />
+		转换器，自定义参数
+		<property name="conversionService" ref="conversionService" />
+	</bean> -->
+	
 	
 	<!-- 自定义参数绑定 -->
 	<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
@@ -37,12 +60,28 @@
 		</property>
 	</bean>
 	
-	<!-- JSP视图解析器 ，默认使用JSTL，要添加jstl包-->
-	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
-		<!-- 配置路径前缀 -->
-		<property name="prefix" value="/WEB-INF/jsp/" />
-		<!-- 配置路径后缀 -->
-		<property name="suffix" value=".jsp" />
+	<!-- 校验器 -->
+	<bean id="validatorBean"
+		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+		<!-- 校验器 -->
+		<property name="providerClass" value="org.hibernate.validator.HibernateValidator" />
+		<!-- 指定校验使用的资源文件，如果不指定则默认使用classpath下的ValidationMessages.properties -->
+		<property name="validationMessageSource" ref="messageSource" />
 	</bean>
+	<!-- 校验错误信息配置文件 -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<!-- 资源文件名 -->
+		<property name="basenames">
+			<list>
+				<value>classpath:CustomValidationMessages</value>
+			</list>
+		</property>
+		<!-- 资源文件编码格式 -->
+		<property name="fileEncodings" value="utf-8" />
+		<!-- 对资源文件内容缓存时间，单位秒 -->
+		<property name="cacheSeconds" value="120" />
+	</bean>
+
 
 </beans>
