@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import net.codingme.ssm.exception.CustomException;
 import net.codingme.ssm.mapper.ItemsMapper;
 import net.codingme.ssm.mapper.ItemsMapperCustom;
 import net.codingme.ssm.po.Items;
@@ -40,9 +41,16 @@ public class ItemsServiceImpl implements ItemsService {
 	 */
 	@Override
 	public ItemsCustom findItemsById(Integer id) throws Exception {
-		ItemsCustom itemsCustom = new ItemsCustom();
+		ItemsCustom itemsCustom =null;
 		Items items = itemsMapper.selectByPrimaryKey(id);
-		BeanUtils.copyProperties(items, itemsCustom);
+		// 手动抛出异常，让全局的异常处理器来进行处理
+		if(items == null) {
+			throw new CustomException("要修改的商品不存在！");
+		}
+		if(items != null) {
+			 itemsCustom = new ItemsCustom();
+			BeanUtils.copyProperties(items, itemsCustom);
+		}
 		return itemsCustom;
 	}
 

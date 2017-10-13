@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import net.codingme.ssm.controller.validation.ValiGroup1;
+import net.codingme.ssm.exception.CustomException;
 import net.codingme.ssm.po.ItemsCustom;
 import net.codingme.ssm.po.ItemsQueryVo;
 import net.codingme.ssm.service.ItemsService;
@@ -25,6 +26,11 @@ import net.codingme.ssm.service.ItemsService;
  * Description：
  * 			Items的Controller
  * 
+ * 数据回显：
+ * 		比如输入有误需要再次回到表单页面重新填写，原来提交的数据仍然显示在页面上
+ * 		简单类型：使用Model将传入的参数再放到request域
+ * 		POJO类型：springmvc默认支持pojo数据回显，springmvc自动将形参中的pojo重新放回request域中，request的key为pojo的类名（首字母小写）
+ * 		POJO自定义回显名字：@ModelAttribute完成数据回显，例如：@ModelAttribute("item") ItemsCustom itemsCustom，也可以再次model添加定义名字
  * @author  Darcy
  * @date    2017年10月4日下午4:33:08
  * @version 1.0
