@@ -97,4 +97,16 @@
 		</property>
 	</bean>
 
+	<!-- 全局拦截器 -->
+	<!-- 拦截器 -->
+	<mvc:interceptors>
+		<!-- 多个拦截器，顺序执行 -->
+		<mvc:interceptor>
+			<!-- /**表示所有url包括url路径 -->
+			<mvc:mapping path="/**"/>
+			<bean class="net.codingme.ssm.controller.interceptor.HandlerInterceptor1" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+	
 </beans>
