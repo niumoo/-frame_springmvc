@@ -46,7 +46,12 @@
 		<servlet-name>dispatcherServlet</servlet-name>
 		<url-pattern>*.action</url-pattern>
 	</servlet-mapping>
-
+	<!-- 上下两种配置可以共存！ -->
+	<servlet-mapping>
+		<servlet-name>dispatcherServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
 	<!-- 默认访问首页 -->
 	<welcome-file-list>
 		<welcome-file>items/queryItems.action</welcome-file>

@@ -31,6 +31,9 @@
 		 -->
 	<mvc:annotation-driven conversion-service="conversionService" validator="validatorBean" />
 	
+	<!-- 定义静态资源 -->
+	<mvc:resources mapping="/js/**" location="/js/" />
+	
 	<!-- JSP视图解析器 ，默认使用JSTL，要添加jstl包-->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
 		<!-- 配置路径前缀 -->
