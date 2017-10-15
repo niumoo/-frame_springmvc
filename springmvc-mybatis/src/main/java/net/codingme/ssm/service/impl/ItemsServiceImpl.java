@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import net.codingme.ssm.exception.CustomException;
 import net.codingme.ssm.mapper.ItemsMapper;
@@ -20,6 +21,7 @@ import net.codingme.ssm.service.ItemsService;
  * @date    2017年10月4日下午4:16:02
  * @version 1.0
  */
+@Service
 public class ItemsServiceImpl implements ItemsService {
 	
 	@Autowired

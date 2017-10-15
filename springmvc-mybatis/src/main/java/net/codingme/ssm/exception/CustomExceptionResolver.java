@@ -29,7 +29,7 @@ public class CustomExceptionResolver implements HandlerExceptionResolver {
 		if(ex instanceof CustomException) {
 			customException = (CustomException) ex;
 		}else {
-			customException = new CustomException("未知错误");
+			customException = new CustomException("<p>不好意思，出现了未知错误！</p>");
 		}
 		
 		// 获取错误信息

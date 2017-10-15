@@ -1,10 +1,15 @@
 package net.codingme.ssm.controller;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
-
+import org.junit.Test;
+import org.junit.runner.notification.StoppedByUserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import net.codingme.ssm.controller.validation.ValiGroup1;
@@ -133,6 +139,10 @@ public class ItemsController {
 	 *      注意：@Validated和BindingResult bindingResult是配对出现，并且形参顺序是固定的（一前一后）。
 	 * 		value= {ValiGroup1.class}：说明只校验ValiGroup1的规则， 如果有多个规则需要使用,分割。在定义规则的地方可以指定所属分组
 	 * 
+	 * 添加文件上传
+	 * 		MultipartFile itemsPic：文件上传，itemsPic对应页面的文件上传name
+	 * 
+	 * @since 2017.10.15  文件上传
 	 * @since 2017.10.10 校验
 	 * 
 	 * @param request HttpServletRequest的请求信息
@@ -142,8 +152,11 @@ public class ItemsController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/editItemsSubmit", method={RequestMethod.POST})
-	public String editItemsSubmit(Model model,Integer id,
-			@Validated(value= {ValiGroup1.class}) ItemsCustom itemsCustom ,BindingResult bindingResult )throws Exception {
+	public String editItemsSubmit(
+			Model model,
+			Integer id,
+			@Validated(value= {ValiGroup1.class}) ItemsCustom itemsCustom ,BindingResult bindingResult,
+			MultipartFile itemsPic)throws Exception {
 		
 		// 获取校验错误信息，如果有错误信息
 		if(bindingResult.hasErrors()) {
@@ -157,8 +170,33 @@ public class ItemsController {
 			// 出错重新到商品修改页面
 			return "items/editItems";
 		}
+		/**
+		 * 文件上传
+		 */
+		// 上传步骤1：原始文件名称
+		String originalFilename = itemsPic.getOriginalFilename();
+		// 上传步骤2：上传图片
+		if(itemsPic!=null && originalFilename.length()>0) {
+			// 上传步骤2.1：设置存储图片的物理路径
+			String storePath = "D:\\webserver\\apache-tomcat-8.5.15\\webapp\\upload\\";
+			
+			// 上传步骤2.2原始文件后缀
+			String suf = originalFilename.substring(originalFilename.lastIndexOf("."), originalFilename.length());
+			
+			// 上传步骤2.3新的图片名称
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+			String newFileName =sdf.format(new Date()) + suf;
+			
+			// 上传步骤2.4新图片
+			File newFile = new File(storePath + newFileName);
+			// 上传步骤2.5从内存中写入磁盘
+			itemsPic.transferTo(newFile);
+			// 上传步骤2.6将新图片名称写到itemsCustom中
+			itemsCustom.setPic(newFileName);
+		}
+		
 		// 调用service更新商品信息，页面需要将商品信息传到此方法
-		// itemsService.updateItems(id, itemsCustom);
+		itemsService.updateItems(id, itemsCustom);
 		// 页面转发
 		// return "forward:queryItems.action";
 		// 重定向到商品查询列表
@@ -243,6 +281,17 @@ public class ItemsController {
 		}
 		// 重定向到商品查询列表
 		return "redirect:queryItems.action";
+	}
+	
+	@Test
+	public void test() {
+		String originalFilename = "adasasd.dadsa.d.jpg";
+		// 原始文件后缀
+		String suf = originalFilename.substring(originalFilename.lastIndexOf("."), originalFilename.length());
+		// 新的图片名称
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		String newFileName =sdf.format(new Date()) + suf;
+		System.out.println(newFileName);
 	}
 	
 }

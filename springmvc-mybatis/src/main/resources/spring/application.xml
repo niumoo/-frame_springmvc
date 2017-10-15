@@ -51,7 +51,9 @@
 	</bean>
 
 	<!-- 配置的方式管理service -->
-	<bean id="itemsService" class="net.codingme.ssm.service.impl.ItemsServiceImpl" />
+	<!-- <bean id="itemsService" class="net.codingme.ssm.service.impl.ItemsServiceImpl" /> -->
+	<!-- 自动扫描注解service的bean -->
+	<context:component-scan base-package="net.codingme.ssm.service.impl" />
 
 	<!-- 声明事务控制,对mybatis操作数据库事务控制，spring使用jdbc的事务控制类 -->
 	<bean id="transactionManager"

@@ -86,5 +86,12 @@
 	<!-- 全局异常处理器 -->
 	<bean class="net.codingme.ssm.exception.CustomExceptionResolver" />
 
+	<!-- 文件上传解析 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 设置上传文件的最大尺寸为1MB(1byte*1024*104) -->
+		<property name="maxUploadSize">
+			<value>1048576</value>
+		</property>
+	</bean>
 
 </beans>
