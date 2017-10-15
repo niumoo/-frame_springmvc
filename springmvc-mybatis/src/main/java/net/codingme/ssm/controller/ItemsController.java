@@ -16,9 +16,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -94,6 +96,23 @@ public class ItemsController {
 		modelAndView.addObject("itemsList",itemsList);
 		
 		return modelAndView;
+	}
+	
+	/**
+	 * springMVC 对RESTFul的支持
+	 * 		/itemsView/{id}： 中的id，是一个占位符，
+	 * 		/@PathVariable：可以读取占位符中的参数
+	 * 		如果占位符名称和形参名称一致，可以在@PathVariable中不指定名称
+	 * 		
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/itemsView/{id}")
+	public @ResponseBody ItemsCustom itemsView(@PathVariable("id") Integer id)throws Exception{
+		// 根据ID查询商品信息
+		ItemsCustom itemsCustom = itemsService.findItemsById(id);
+		return itemsCustom;
 	}
 	
 	
