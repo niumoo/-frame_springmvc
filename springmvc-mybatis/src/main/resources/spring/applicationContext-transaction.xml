@@ -13,48 +13,6 @@
 		http://www.springframework.org/schema/tx 
 		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd ">
 
-	<!-- 加载db.properties文件 -->
-	<context:property-placeholder location="classpath:db.properties" />
-
-	<!-- 配置数据源dbcp连接池 ,注意：这里自己添加了dbcp2的jar，所以修改class路径为...dbcp2... -->
-<!-- <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
-		destroy-method="close">
-		<property name="driverClassName" value="${jdbc.driver}" />
-		<property name="url" value="${jdbc.url}" />
-		<property name="username" value="${jdbc.username}" />
-		<property name="password" value="${jdbc.password}" />
-		<property name="maxActive" value="30" />
-		<property name="maxIdle" value="5" />
-	</bean> -->
-
-	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
-		destroy-method="close">
-		<property name="driverClassName" value="${jdbc.driver}" />
-		<property name="url" value="${jdbc.url}" />
-		<property name="username" value="${jdbc.username}" />
-		<property name="password" value="${jdbc.password}" />
-		<property name="maxTotal" value="30" />
-		<property name="maxIdle" value="5" />
-	</bean>
-
-	<!-- 配置sqlSessionFactory -->
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-		<property name="configLocation" value="classpath:mybatis/mybatisConfig.xml" />
-	</bean>
-
-	<!-- 配置mapper扫描器 -->
-	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<!-- 扫描包路径，多个包使用半角逗号分割 -->
-		<property name="basePackage" value="net.codingme.ssm.mapper" />
-		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
-	</bean>
-
-	<!-- 配置的方式管理service -->
-	<!-- <bean id="itemsService" class="net.codingme.ssm.service.impl.ItemsServiceImpl" /> -->
-	<!-- 自动扫描注解service的bean -->
-	<context:component-scan base-package="net.codingme.ssm.service.impl" />
-
 	<!-- 声明事务控制,对mybatis操作数据库事务控制，spring使用jdbc的事务控制类 -->
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
@@ -81,7 +39,5 @@
 		<aop:advisor advice-ref="txAdvice"
 			pointcut="execution(* net.codingme.ssm.service.impl.*.*(..))" />
 	</aop:config>
-
-
-
+	
 </beans>
